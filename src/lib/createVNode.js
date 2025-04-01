@@ -6,6 +6,6 @@ export function createVNode(type, props, ...children) {
     props,
     children: children
       .flat(Infinity)
-      .filter((ch) => ch !== null && ch !== undefined),
+      .filter((ch) => ch !== null && ch !== false),
   };
 }
