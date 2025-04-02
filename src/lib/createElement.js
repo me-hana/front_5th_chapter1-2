@@ -1,8 +1,6 @@
 import { addEvent } from "./eventManager";
 
 export function createElement(vNode) {
-  console.log(vNode);
-
   if (vNode == null || typeof vNode === "boolean") {
     return document.createTextNode("");
   }
@@ -29,6 +27,7 @@ function updateAttributes($el, props) {
     // 이벤트를 이벤트 관리 객체에 넣어주기
     if (attr?.startsWith("on")) {
       addEvent($el, attr.slice(2).toLowerCase(), props[attr]);
+      return; // 이벤트의 경우, 아래 코드가 실행되지 않도록 return
     }
 
     // 테스트코드 통과를 위해 className이 아니라 class로 넣기
