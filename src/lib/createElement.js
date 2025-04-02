@@ -1,4 +1,4 @@
-// import { addEvent } from "./eventManager";
+import { addEvent } from "./eventManager";
 
 export function createElement(vNode) {
   console.log(vNode);
@@ -26,6 +26,12 @@ export function createElement(vNode) {
 
 function updateAttributes($el, props) {
   Object.entries(props || {}).map(([attr, value]) => {
+    // 이벤트를 이벤트 관리 객체에 넣어주기
+    if (attr?.startsWith("on")) {
+      addEvent($el, attr.slice(2).toLowerCase(), props[attr]);
+    }
+
+    // 테스트코드 통과를 위해 className이 아니라 class로 넣기
     if (attr === "className") {
       $el.setAttribute("class", value);
     } else {
