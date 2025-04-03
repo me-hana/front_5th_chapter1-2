@@ -9,8 +9,10 @@ export function setupEventListeners(root) {
 }
 
 export function handleGlobalEvents(e) {
-  if (globalEvents[e.type].has(e.target)) {
-    globalEvents[e.type].get(e.target)(e);
+  const typeMap = globalEvents.get(e.type);
+  if (typeMap && typeMap.has(e.target)) {
+    const handler = typeMap.get(e.target);
+    handler?.(e);
   }
 }
 
@@ -18,16 +20,16 @@ export function handleGlobalEvents(e) {
 export function addEvent(element, eventType, handler) {
   if (!element || typeof handler !== "function") return;
 
-  globalEvents[eventType] = globalEvents[eventType] || new WeakMap();
-  globalEvents[eventType].set(element, handler);
+  if (!globalEvents.has(eventType)) {
+    globalEvents.set(eventType, new WeakMap());
+  }
+
+  globalEvents.get(eventType).set(element, handler);
 }
 
 export function removeEvent(element, eventType, handler) {
-  // 이벤트가 없으면 호출을 막기 위함
-  if (
-    globalEvents[eventType] &&
-    globalEvents[eventType].get(element) === handler
-  ) {
-    globalEvents[eventType].delete(element);
-  } else return;
+  const typeMap = globalEvents.get(eventType);
+  if (typeMap && typeMap.get(element) === handler) {
+    typeMap.delete(element);
+  }
 }
